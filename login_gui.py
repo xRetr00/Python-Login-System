@@ -21,39 +21,30 @@ def buy_key():
     url = "https://github.com/ShereefX01" #Add  Here Your Keys Store Link!
     webbrowser.open(url)
 
+server = 'localhost'
+port = 9966
 
 def login():
-    # Get the user's input
     key = Key_entry.get()
-    version = "1.0"  # This is To Prevent The User From Using Outdated Version From Your Tool
-
-    # Read the server and port information from server_port.txt
-    # You Can Remove This And Add Server And Port In The Code!
-    with open("server_port.txt") as f:
-        server = f.readline().strip()
-        port = int(f.readline().strip())
+    version = 2.0  # This is To Prevent The User From Using Outdated Version From Your Tool
 
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
             client.connect((server, port))
 
-            # Hash the key using the Sha512 algorithm
             hashed_key = hashlib.sha512(key.encode()).hexdigest()
 
-            # Send the hashed key and version to the server for authentication
             message = f"{hashed_key}:{version}"
             client.send(message.encode())
 
-            # Receive the response from the server
             response = client.recv(1024).decode().strip()
             print(response)
             # Make Sure If You Edit SomeThing Here Don't Forget To Edit it On The Server Code Too!
             if response.startswith("Login Successful!"):
                 show_message_box("Authentication Successfully :)", f"{response}")
                 if remeber.get() == 1:
-                    # Save the user's input for next time
                     with open('credentials.txt', 'a') as f:
-                        f.write(f"{key}\n")  # The Key Will Saved In The Text File But Not Hashed!
+                        f.write(f"{key}\n")
                         # You Can Add The Main GUI Here!
 
             else:
@@ -64,18 +55,18 @@ def login():
 
 
 
-
-# App Frame
 app = customtkinter.CTk()
 app.geometry("480x250")
 app.title("Python Login System")
 #app.iconbitmap("icon.ico")
 app.resizable(False, False) # You Can Edit This As U Need!
-# Frame
+
+
+
 frame = customtkinter.CTkFrame(master=app)
 frame.pack(pady=12, padx=10, fill="both", expand=True)
 
-# GUI Design
+
 label = customtkinter.CTkLabel(master=frame, text="Welcome To Login GUI", font=("Arial Black", 22))
 label.pack(pady=10, padx=10)
 
